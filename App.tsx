@@ -15,6 +15,7 @@ const config = {
     eventName: "Juacofest 22",
     eventTagline: "“Cumplo 22 y lo celebro el Día del Amigo como se debe”",
     eventDate: "2024-07-20T16:00:00-03:00", // Target date: July 20, 2024, 16:00 Argentina Time (UTC-3)
+    googleSheetsScriptUrl: "https://script.google.com/macros/s/AKfycbwN9tXO3etFUGUmD_OboZT3Ae74237nzWjZMOK9ep6zjhM2bvolyvyZqLv3jAA038zMyw/execE", // Paste the URL from your deployed Google Apps Script
     location: "Calle 64 n°231 (e/ 115 y 116), La Plata",
     googleMapsEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3271.748399583471!2d-57.94521038476204!3d-34.9126931803799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a2e63c0a5d4dbd%3A0x6b8c9d1a3dc31113!2sC.%2064%20231%2C%20B1904%20La%20Plata%2C%20Provincia%20de%20Buenos%20Aires%2C%20Argentina!5e0!3m2!1sen!2s!4v1652726359531!5m2!1sen!2s",
     dateText: "Domingo 20 de julio",
@@ -33,7 +34,6 @@ const config = {
 
 const App: React.FC = () => {
     const mainRef = useRef<HTMLDivElement>(null);
-    const [submissions, setSubmissions] = useState<RsvpData[]>([]);
     const [formState, setFormState] = useState<RsvpData>({
         name: '',
         attendance: Attendance.YES,
@@ -43,19 +43,18 @@ const App: React.FC = () => {
         songSuggestion: '',
         message: ''
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isError, setIsError] = useState(false);
 
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
 
-        // --- GSAP Animations ---
         const ctx = gsap.context(() => {
-            // Header animation
             gsap.from(".header-title", { opacity: 0, y: -50, duration: 1, ease: 'power3.out' });
             gsap.from(".header-subtitle", { opacity: 0, y: -30, duration: 1, delay: 0.2, ease: 'power3.out' });
             gsap.from(".logo-container", { opacity: 0, scale: 0.8, duration: 1.2, delay: 0.4, ease: 'elastic.out(1, 0.75)' });
 
-            // Staggered section fade-in on scroll
             const sections = gsap.utils.toArray('section');
             sections.forEach((section: any) => {
                 gsap.from(section, {
@@ -72,7 +71,7 @@ const App: React.FC = () => {
             });
         }, mainRef);
         
-        return () => ctx.revert(); // Cleanup GSAP animations
+        return () => ctx.revert();
     }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -80,30 +79,36 @@ const App: React.FC = () => {
         setFormState(prevState => ({ ...prevState, [name]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setSubmissions(prev => [...prev, formState]);
-        setIsSubmitted(true);
-        console.log("New Submission:", formState);
+        if (config.googleSheetsScriptUrl === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+            alert("Error: La URL de Google Apps Script no está configurada.");
+            return;
+        }
+        setIsSubmitting(true);
+        setIsError(false);
+        try {
+            const response = await fetch(config.googleSheetsScriptUrl, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formState)
+            });
+             if (response.ok) {
+                setIsSubmitted(true);
+            } else {
+                throw new Error('Network response was not ok.');
+            }
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            setIsError(true);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
     
-    const downloadCsv = () => {
-        const header = "Nombre,Asistencia,Horario,Se queda a dormir,Trae algo,Cancion,Mensaje\n";
-        const rows = submissions.map(s => 
-            `"${s.name}","${s.attendance}","${s.schedule}","${s.sleepover}","${s.contribution.replace(/"/g, '""')}","${s.songSuggestion.replace(/"/g, '""')}","${s.message.replace(/"/g, '""')}"`
-        ).join("\n");
-
-        const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", "juacofest_asistencia.csv");
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
     const shareOnWhatsApp = () => {
         const url = window.location.href.replace(/#.*$/, ''); // Clean URL
         const message = encodeURIComponent(config.whatsAppShareMessage.replace('[URL_DEL_SITIO]', url));
@@ -175,11 +180,10 @@ const App: React.FC = () => {
                     {isSubmitted ? (
                         <div className="text-center p-8 bg-green-500/20 border border-green-500 rounded-lg">
                             <h3 className="text-2xl font-bold text-white">¡Gracias por confirmar! 😄</h3>
-                            <p className="text-green-300 mt-2">¡Te espero para festejar!</p>
+                            <p className="text-green-300 mt-2">¡Tus datos fueron enviados! Te espero para festejar.</p>
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} className="space-y-6 text-left">
-                           {/* Form fields identical to previous version, but with updated styling from style vars */}
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div>
                                     <label htmlFor="name" className="block text-sm font-bold text-[var(--color-beige)] mb-2">Tu Nombre:</label>
@@ -216,25 +220,16 @@ const App: React.FC = () => {
                                 <label htmlFor="message" className="block text-sm font-bold text-[var(--color-beige)] mb-2">Dejale un mensaje a Joaco:</label>
                                 <textarea id="message" name="message" rows={3} value={formState.message} onChange={handleInputChange} placeholder="¡Feliz cumple!" className="w-full bg-[var(--color-dark)] border border-gray-600 rounded-md py-2 px-3 text-[var(--color-white)] focus:outline-none focus:ring-2 focus:ring-[var(--color-pink)]"></textarea>
                             </div>
+                             {isError && <p className="text-center text-red-400 font-bold">Hubo un error al enviar. Por favor, intentá de nuevo.</p>}
                             <div className="text-center pt-4">
-                                <button type="submit" className="bg-[var(--color-pink)] text-white font-bold py-3 px-10 rounded-full text-lg shadow-lg hover:bg-[var(--color-red)] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-[var(--color-pink)]">
-                                    Enviar Confirmación
+                                <button type="submit" disabled={isSubmitting} className="bg-[var(--color-pink)] text-white font-bold py-3 px-10 rounded-full text-lg shadow-lg hover:bg-[var(--color-red)] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-[var(--color-pink)] disabled:bg-gray-500 disabled:cursor-not-allowed">
+                                    {isSubmitting ? 'Enviando...' : 'Enviar Confirmación'}
                                 </button>
                             </div>
                         </form>
                     )}
                 </section>
                 
-                {submissions.length > 0 && (
-                     <div className="my-10 p-4 bg-purple-900/50 border border-purple-700 rounded-lg">
-                        <h3 className="font-bold text-lg text-purple-300">(Solo para Joaco)</h3>
-                        <p className="text-sm text-gray-400 mb-3">Hay {submissions.length} respuesta{submissions.length > 1 ? 's' : ''}.</p>
-                        <button onClick={downloadCsv} className="bg-purple-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-purple-700 transition">
-                            Descargar respuestas (.csv)
-                        </button>
-                    </div>
-                )}
-
                 <section id="extras" className="section-card my-16 text-left">
                      <h2 className="text-3xl font-bold text-[var(--color-orange)] mb-6 text-center">Extras a tener en cuenta</h2>
                      <ul className="space-y-4 text-[var(--color-beige)]">

@@ -139,6 +139,8 @@ var config = {
   eventTagline: "\u201CCumplo 22 y lo celebro el D\xEDa del Amigo como se debe\u201D",
   eventDate: "2024-07-20T16:00:00-03:00",
   // Target date: July 20, 2024, 16:00 Argentina Time (UTC-3)
+  googleSheetsScriptUrl: "https://script.google.com/macros/s/AKfycbwN9tXO3etFUGUmD_OboZT3Ae74237nzWjZMOK9ep6zjhM2bvolyvyZqLv3jAA038zMyw/execE",
+  // Paste the URL from your deployed Google Apps Script
   location: "Calle 64 n\xB0231 (e/ 115 y 116), La Plata",
   googleMapsEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3271.748399583471!2d-57.94521038476204!3d-34.9126931803799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a2e63c0a5d4dbd%3A0x6b8c9d1a3dc31113!2sC.%2064%20231%2C%20B1904%20La%20Plata%2C%20Provincia%20de%20Buenos%20Aires%2C%20Argentina!5e0!3m2!1sen!2s!4v1652726359531!5m2!1sen!2s",
   dateText: "Domingo 20 de julio",
@@ -154,7 +156,6 @@ var config = {
 };
 var App = () => {
   const mainRef = useRef(null);
-  const [submissions, setSubmissions] = useState4([]);
   const [formState, setFormState] = useState4({
     name: "",
     attendance: "S\xED" /* YES */,
@@ -164,7 +165,9 @@ var App = () => {
     songSuggestion: "",
     message: ""
   });
+  const [isSubmitting, setIsSubmitting] = useState4(false);
   const [isSubmitted, setIsSubmitted] = useState4(false);
+  const [isError, setIsError] = useState4(false);
   useEffect3(() => {
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
@@ -192,26 +195,34 @@ var App = () => {
     const { name, value } = e.target;
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmissions((prev) => [...prev, formState]);
-    setIsSubmitted(true);
-    console.log("New Submission:", formState);
-  };
-  const downloadCsv = () => {
-    const header = "Nombre,Asistencia,Horario,Se queda a dormir,Trae algo,Cancion,Mensaje\n";
-    const rows = submissions.map(
-      (s) => `"${s.name}","${s.attendance}","${s.schedule}","${s.sleepover}","${s.contribution.replace(/"/g, '""')}","${s.songSuggestion.replace(/"/g, '""')}","${s.message.replace(/"/g, '""')}"`
-    ).join("\n");
-    const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", "juacofest_asistencia.csv");
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (config.googleSheetsScriptUrl === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+      alert("Error: La URL de Google Apps Script no est\xE1 configurada.");
+      return;
+    }
+    setIsSubmitting(true);
+    setIsError(false);
+    try {
+      const response = await fetch(config.googleSheetsScriptUrl, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formState)
+      });
+      if (response.ok) {
+        setIsSubmitted(true);
+      } else {
+        throw new Error("Network response was not ok.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setIsError(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   const shareOnWhatsApp = () => {
     const url = window.location.href.replace(/#.*$/, "");
@@ -279,7 +290,7 @@ var App = () => {
         /* @__PURE__ */ jsx4("h2", { className: "text-3xl font-bold text-[var(--color-violet)] mb-6", children: "Confirm\xE1 tu asistencia" }),
         isSubmitted ? /* @__PURE__ */ jsxs3("div", { className: "text-center p-8 bg-green-500/20 border border-green-500 rounded-lg", children: [
           /* @__PURE__ */ jsx4("h3", { className: "text-2xl font-bold text-white", children: "\xA1Gracias por confirmar! \u{1F604}" }),
-          /* @__PURE__ */ jsx4("p", { className: "text-green-300 mt-2", children: "\xA1Te espero para festejar!" })
+          /* @__PURE__ */ jsx4("p", { className: "text-green-300 mt-2", children: "\xA1Tus datos fueron enviados! Te espero para festejar." })
         ] }) : /* @__PURE__ */ jsxs3("form", { onSubmit: handleSubmit, className: "space-y-6 text-left", children: [
           /* @__PURE__ */ jsxs3("div", { className: "grid md:grid-cols-2 gap-4", children: [
             /* @__PURE__ */ jsxs3("div", { children: [
@@ -311,19 +322,9 @@ var App = () => {
             /* @__PURE__ */ jsx4("label", { htmlFor: "message", className: "block text-sm font-bold text-[var(--color-beige)] mb-2", children: "Dejale un mensaje a Joaco:" }),
             /* @__PURE__ */ jsx4("textarea", { id: "message", name: "message", rows: 3, value: formState.message, onChange: handleInputChange, placeholder: "\xA1Feliz cumple!", className: "w-full bg-[var(--color-dark)] border border-gray-600 rounded-md py-2 px-3 text-[var(--color-white)] focus:outline-none focus:ring-2 focus:ring-[var(--color-pink)]" })
           ] }),
-          /* @__PURE__ */ jsx4("div", { className: "text-center pt-4", children: /* @__PURE__ */ jsx4("button", { type: "submit", className: "bg-[var(--color-pink)] text-white font-bold py-3 px-10 rounded-full text-lg shadow-lg hover:bg-[var(--color-red)] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-[var(--color-pink)]", children: "Enviar Confirmaci\xF3n" }) })
+          isError && /* @__PURE__ */ jsx4("p", { className: "text-center text-red-400 font-bold", children: "Hubo un error al enviar. Por favor, intent\xE1 de nuevo." }),
+          /* @__PURE__ */ jsx4("div", { className: "text-center pt-4", children: /* @__PURE__ */ jsx4("button", { type: "submit", disabled: isSubmitting, className: "bg-[var(--color-pink)] text-white font-bold py-3 px-10 rounded-full text-lg shadow-lg hover:bg-[var(--color-red)] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-[var(--color-pink)] disabled:bg-gray-500 disabled:cursor-not-allowed", children: isSubmitting ? "Enviando..." : "Enviar Confirmaci\xF3n" }) })
         ] })
-      ] }),
-      submissions.length > 0 && /* @__PURE__ */ jsxs3("div", { className: "my-10 p-4 bg-purple-900/50 border border-purple-700 rounded-lg", children: [
-        /* @__PURE__ */ jsx4("h3", { className: "font-bold text-lg text-purple-300", children: "(Solo para Joaco)" }),
-        /* @__PURE__ */ jsxs3("p", { className: "text-sm text-gray-400 mb-3", children: [
-          "Hay ",
-          submissions.length,
-          " respuesta",
-          submissions.length > 1 ? "s" : "",
-          "."
-        ] }),
-        /* @__PURE__ */ jsx4("button", { onClick: downloadCsv, className: "bg-purple-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-purple-700 transition", children: "Descargar respuestas (.csv)" })
       ] }),
       /* @__PURE__ */ jsxs3("section", { id: "extras", className: "section-card my-16 text-left", children: [
         /* @__PURE__ */ jsx4("h2", { className: "text-3xl font-bold text-[var(--color-orange)] mb-6 text-center", children: "Extras a tener en cuenta" }),
