@@ -16,7 +16,7 @@ const FaqItem: React.FC<FaqItemProps> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b-2 border-[var(--color-dark)] py-4">
+    <div className="border-b-0 border-[var(--color-dark)] py-4">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex justify-between items-center text-left text-lg font-semibold text-white hover:text-[var(--color-sky)] transition-colors duration-200 focus:outline-none"

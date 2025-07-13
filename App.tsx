@@ -197,8 +197,9 @@ const App: React.FC = () => {
                 
                 <header className="grid md:grid-cols-2 gap-8 items-center mb-16">
                     <div className="text-center md:text-left">
-                        <h1 className="header-title text-6xl md:text-6xl font-black text-[var(--color-white)] drop-shadow-lg">
-                           <span className="inline-block animate-bounce">🥺</span> {config.eventName}
+                        <h1 className="header-title text-6xl md:text-6xl font-black text-[var(--color-white)] drop-shadow-lg flex flex-col items-center md:flex-row md:items-baseline">
+                           <span className="order-1 md:order-2">{config.eventName}</span>
+                           <span className="order-2 md:order-1 inline-block animate-bounce md:mr-4">🥺</span>
                         </h1>
                         <div className="header-subtitle text-xl md:text-2xl text-[var(--color-beige)] mt-4 font-semibold min-h-[5rem] md:min-h-[2.5rem] flex justify-center md:justify-start items-center">
                             <div>

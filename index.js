@@ -76,7 +76,7 @@ import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
 var ChevronDownIcon = ({ className }) => /* @__PURE__ */ jsx2("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 3, stroke: "currentColor", className, children: /* @__PURE__ */ jsx2("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m19.5 8.25-7.5 7.5-7.5-7.5" }) });
 var FaqItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState2(false);
-  return /* @__PURE__ */ jsxs2("div", { className: "border-b-2 border-[var(--color-dark)] py-4", children: [
+  return /* @__PURE__ */ jsxs2("div", { className: "border-b-0 border-[var(--color-dark)] py-4", children: [
     /* @__PURE__ */ jsxs2(
       "button",
       {
@@ -139,30 +139,28 @@ var BackToTopButton_default = BackToTopButton;
 // components/FloatingNames.tsx
 import { useState as useState4, useEffect as useEffect3, useRef } from "react";
 import { jsx as jsx4 } from "react/jsx-runtime";
-var createNameState = (text) => {
+var createNameStyle = () => {
   const scale = Math.random() * 0.4 + 0.9;
   const rotation = Math.random() * 50 - 25;
   return {
-    id: `${text}-${Math.random()}`,
-    text,
     top: `${Math.random() * 95}%`,
-    // Posición vertical aleatoria
     left: `${Math.random() * 95}%`,
-    // Posición horizontal aleatoria
     transform: `rotate(${rotation}deg) scale(${scale})`,
     fontSize: `${Math.random() * 1.2 + 1.2}rem`,
-    // Tamaño de fuente entre 1.2rem y 2.4rem
     opacity: Math.random() * 0.3 + 0.1
-    // Opacidad entre 0.2 y 0.5
   };
 };
 var FloatingNames = ({ guests }) => {
-  const [names, setNames] = useState4([]);
+  const [positions, setPositions] = useState4(/* @__PURE__ */ new Map());
   const [visible, setVisible] = useState4(false);
   const animationTimeoutRef = useRef(null);
   const animationIntervalRef = useRef(null);
-  const updateNames = () => {
-    setNames(guests.map(createNameState));
+  const updatePositions = () => {
+    const newMap = /* @__PURE__ */ new Map();
+    guests.forEach((name) => {
+      newMap.set(name, createNameStyle());
+    });
+    setPositions(newMap);
   };
   useEffect3(() => {
     if (guests.length === 0) {
@@ -172,47 +170,49 @@ var FloatingNames = ({ guests }) => {
     const runAnimationCycle = () => {
       setVisible(false);
       animationTimeoutRef.current = window.setTimeout(() => {
-        updateNames();
+        updatePositions();
         setVisible(true);
       }, 1e3);
     };
-    updateNames();
-    setVisible(true);
+    updatePositions();
+    animationTimeoutRef.current = window.setTimeout(() => {
+      setVisible(true);
+    }, 100);
     animationIntervalRef.current = window.setInterval(runAnimationCycle, 1e4);
-    window.addEventListener("resize", updateNames);
+    window.addEventListener("resize", updatePositions);
     return () => {
       if (animationIntervalRef.current) clearInterval(animationIntervalRef.current);
       if (animationTimeoutRef.current) clearTimeout(animationTimeoutRef.current);
-      window.removeEventListener("resize", updateNames);
+      window.removeEventListener("resize", updatePositions);
     };
   }, [guests]);
-  if (!guests.length) {
-    return null;
-  }
+  if (!guests.length) return null;
   return /* @__PURE__ */ jsx4(
     "div",
     {
       className: "fixed top-0 left-0 w-screen h-screen -z-10 overflow-hidden pointer-events-none",
       "aria-hidden": "true",
-      children: names.map((name) => /* @__PURE__ */ jsx4(
-        "span",
-        {
-          className: "absolute font-bold whitespace-nowrap",
-          style: {
-            top: name.top,
-            left: name.left,
-            transform: name.transform,
-            fontSize: name.fontSize,
-            color: "var(--color-beige)",
-            opacity: visible ? name.opacity : 0,
-            // Control opacity for fade effect
-            // Slower transitions for a more graceful effect
-            transition: "opacity 1s ease-in-out, top 1.5s ease-out, left 1.5s ease-out"
+      children: guests.map((name) => {
+        const style = positions.get(name);
+        if (!style) return null;
+        return /* @__PURE__ */ jsx4(
+          "span",
+          {
+            className: "absolute font-bold whitespace-nowrap",
+            style: {
+              top: style.top,
+              left: style.left,
+              transform: style.transform,
+              fontSize: style.fontSize,
+              color: "var(--color-beige)",
+              opacity: visible ? style.opacity : 0,
+              transition: "opacity 1s ease-in-out"
+            },
+            children: name
           },
-          children: name.text
-        },
-        name.id
-      ))
+          name
+        );
+      })
     }
   );
 };
@@ -379,10 +379,9 @@ var App = () => {
     /* @__PURE__ */ jsxs3("main", { ref: mainRef, className: "container mx-auto px-4 py-8 md:py-12 max-w-5xl text-center relative z-10", children: [
       /* @__PURE__ */ jsxs3("header", { className: "grid md:grid-cols-2 gap-8 items-center mb-16", children: [
         /* @__PURE__ */ jsxs3("div", { className: "text-center md:text-left", children: [
-          /* @__PURE__ */ jsxs3("h1", { className: "header-title text-6xl md:text-6xl font-black text-[var(--color-white)] drop-shadow-lg", children: [
-            /* @__PURE__ */ jsx5("span", { className: "inline-block animate-bounce", children: "\u{1F97A}" }),
-            " ",
-            config.eventName
+          /* @__PURE__ */ jsxs3("h1", { className: "header-title text-6xl md:text-6xl font-black text-[var(--color-white)] drop-shadow-lg flex flex-col items-center md:flex-row md:items-baseline", children: [
+            /* @__PURE__ */ jsx5("span", { className: "order-1 md:order-2", children: config.eventName }),
+            /* @__PURE__ */ jsx5("span", { className: "order-2 md:order-1 inline-block animate-bounce md:mr-4", children: "\u{1F97A}" })
           ] }),
           /* @__PURE__ */ jsx5("div", { className: "header-subtitle text-xl md:text-2xl text-[var(--color-beige)] mt-4 font-semibold min-h-[5rem] md:min-h-[2.5rem] flex justify-center md:justify-start items-center", children: /* @__PURE__ */ jsxs3("div", { children: [
             /* @__PURE__ */ jsxs3("span", { children: [
