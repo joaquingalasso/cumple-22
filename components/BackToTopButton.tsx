@@ -29,7 +29,7 @@ const BackToTopButton: React.FC = () => {
     return (
         <button
             onClick={scrollToTop}
-            className={`fixed bottom-6 right-6 bg-[var(--color-pink)] text-white p-3 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:bg-[var(--color-violet)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--color-dark)] focus:ring-[var(--color-pink)] ${
+            className={`fixed bottom-6 right-6 bg-[var(--color-pink)] text-white p-3 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:bg-[var(--color-violet)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--color-dark)] focus:ring-[var(--color-pink)] z-50 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
             }`}
             aria-label="Volver arriba"
