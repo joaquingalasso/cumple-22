@@ -165,3 +165,5 @@ Ya con la URL configurada, podés cambiar el resto de la información del evento
 2.  Navegá a la carpeta `public_html` (o donde quieras alojar el sitio).
 3.  Subí **todos los archivos y carpetas** del proyecto, manteniendo la estructura.
 4.  ¡Listo! Tu sitio web estará online y conectado a tu Google Sheet.
+
+esbuild index.tsx --bundle --outfile=index.js --format=esm --external:react --external:react-dom --external:react-dom/client --external:react/jsx-runtime
