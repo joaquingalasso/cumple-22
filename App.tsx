@@ -15,7 +15,7 @@ const config = {
     eventName: "Juacofest 22",
     eventTagline: "“Cumplo 22 y lo celebro el Día del Amigo como se debe”",
     eventDate: "2024-07-20T16:00:00-03:00", // Target date: July 20, 2024, 16:00 Argentina Time (UTC-3)
-    googleSheetsScriptUrl: "https://script.google.com/macros/s/AKfycbwN9tXO3etFUGUmD_OboZT3Ae74237nzWjZMOK9ep6zjhM2bvolyvyZqLv3jAA038zMyw/execE", // Paste the URL from your deployed Google Apps Script
+    googleSheetsScriptUrl: "https://script.google.com/macros/s/AKfycbwN9tXO3etFUGUmD_OboZT3Ae74237nzWjZMOK9ep6zjhM2bvolyvyZqLv3jAA038zMyw/exec", // Paste the URL from your deployed Google Apps Script
     location: "Calle 64 n°231 (e/ 115 y 116), La Plata",
     googleMapsEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3271.748399583471!2d-57.94521038476204!3d-34.9126931803799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a2e63c0a5d4dbd%3A0x6b8c9d1a3dc31113!2sC.%2064%20231%2C%20B1904%20La%20Plata%2C%20Provincia%20de%20Buenos%20Aires%2C%20Argentina!5e0!3m2!1sen!2s!4v1652726359531!5m2!1sen!2s",
     dateText: "Domingo 20 de julio",
