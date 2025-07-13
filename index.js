@@ -451,6 +451,39 @@ var App = () => {
         /* @__PURE__ */ jsx5("p", { className: "text-[var(--color-beige)] mb-6", children: "La m\xFAsica este a\xF1o la hacemos entre varios. Agreg\xE1 esos temas que no pueden faltar." }),
         /* @__PURE__ */ jsx5("a", { href: config.spotifyPlaylistUrl, target: "_blank", rel: "noopener noreferrer", title: "Abrir playlist en una nueva pesta\xF1a", className: "inline-block bg-[var(--color-sky)] text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg hover:bg-[var(--color-violet)] transition-all duration-300 transform hover:scale-105", children: "Ir a la Playlist" })
       ] }),
+      /* @__PURE__ */ jsxs3("section", { id: "extras", className: "section-card my-16 text-left", children: [
+        /* @__PURE__ */ jsx5("h2", { className: "text-3xl font-bold text-[var(--color-orange)] mb-6 text-center", children: "Ten\xE9 en cuenta" }),
+        /* @__PURE__ */ jsxs3("ul", { className: "space-y-4 text-[var(--color-beige)]", children: [
+          /* @__PURE__ */ jsxs3("li", { className: "flex items-start", children: [
+            /* @__PURE__ */ jsx5("span", { className: "text-[var(--color-pink)] mr-3 text-xl", children: "\u{1F379}" }),
+            /* @__PURE__ */ jsxs3("div", { children: [
+              /* @__PURE__ */ jsx5("span", { className: "font-bold text-white", children: "Bebidas:" }),
+              " Pod\xE9s traer algo en especial si quer\xE9s (habr\xE1 gaseosa, agua, t\xE9, mate, pero nada de alcohol)."
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs3("li", { className: "flex items-start", children: [
+            /* @__PURE__ */ jsx5("span", { className: "text-[var(--color-pink)] mr-3 text-xl", children: "\u{1F355}" }),
+            /* @__PURE__ */ jsxs3("div", { children: [
+              /* @__PURE__ */ jsx5("span", { className: "font-bold text-white", children: "Comida:" }),
+              " Comida extra siempre es bienvenida. Lo que no se come, se freeza."
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs3("li", { className: "flex items-start", children: [
+            /* @__PURE__ */ jsx5("span", { className: "text-[var(--color-pink)] mr-3 text-xl", children: "\u{1F552}" }),
+            /* @__PURE__ */ jsxs3("div", { children: [
+              /* @__PURE__ */ jsx5("span", { className: "font-bold text-white", children: "Horarios:" }),
+              " Se puede llegar a cualquier hora, s\xF3lo procur\xE1 cumplir con lo que pongas en el form."
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs3("li", { className: "flex items-start", children: [
+            /* @__PURE__ */ jsx5("span", { className: "text-[var(--color-pink)] mr-3 text-xl", children: "\u{1F4A4}" }),
+            /* @__PURE__ */ jsxs3("div", { children: [
+              /* @__PURE__ */ jsx5("span", { className: "font-bold text-white", children: "Si te qued\xE1s a dormir:" }),
+              " Paciencia el lunes, se me funde la bater\xEDa social."
+            ] })
+          ] })
+        ] })
+      ] }),
       /* @__PURE__ */ jsxs3("section", { id: "rsvp", className: "section-card my-16", children: [
         /* @__PURE__ */ jsx5("h2", { className: "text-3xl font-bold text-[var(--color-violet)] mb-6", children: "Confirm\xE1 tu asistencia" }),
         isSubmitted ? /* @__PURE__ */ jsxs3("div", { className: "text-center p-8 bg-green-500/20 border border-green-500 rounded-lg", children: [
@@ -515,39 +548,6 @@ var App = () => {
           ] }),
           isError && /* @__PURE__ */ jsx5("p", { className: "text-center text-red-400 font-bold", children: "Hubo un error al enviar. Por favor, intent\xE1 de nuevo." }),
           /* @__PURE__ */ jsx5("div", { className: "text-center pt-4", children: /* @__PURE__ */ jsx5("button", { type: "submit", disabled: isSubmitting, className: "bg-[var(--color-pink)] text-white font-bold py-3 px-10 rounded-full text-lg shadow-lg hover:bg-[var(--color-red)] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-[var(--color-pink)] disabled:bg-gray-500 disabled:cursor-not-allowed", children: isSubmitting ? "Enviando..." : "Enviar Confirmaci\xF3n" }) })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxs3("section", { id: "extras", className: "section-card my-16 text-left", children: [
-        /* @__PURE__ */ jsx5("h2", { className: "text-3xl font-bold text-[var(--color-orange)] mb-6 text-center", children: "Ten\xE9 en cuenta" }),
-        /* @__PURE__ */ jsxs3("ul", { className: "space-y-4 text-[var(--color-beige)]", children: [
-          /* @__PURE__ */ jsxs3("li", { className: "flex items-start", children: [
-            /* @__PURE__ */ jsx5("span", { className: "text-[var(--color-pink)] mr-3 text-xl", children: "\u{1F379}" }),
-            /* @__PURE__ */ jsxs3("div", { children: [
-              /* @__PURE__ */ jsx5("span", { className: "font-bold text-white", children: "Bebidas:" }),
-              " Pod\xE9s traer algo en especial si quer\xE9s (habr\xE1 gaseosa, agua, t\xE9, mate, pero nada de alcohol)."
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxs3("li", { className: "flex items-start", children: [
-            /* @__PURE__ */ jsx5("span", { className: "text-[var(--color-pink)] mr-3 text-xl", children: "\u{1F355}" }),
-            /* @__PURE__ */ jsxs3("div", { children: [
-              /* @__PURE__ */ jsx5("span", { className: "font-bold text-white", children: "Comida:" }),
-              " Comida extra siempre es bienvenida. Lo que no se come, se freeza."
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxs3("li", { className: "flex items-start", children: [
-            /* @__PURE__ */ jsx5("span", { className: "text-[var(--color-pink)] mr-3 text-xl", children: "\u{1F552}" }),
-            /* @__PURE__ */ jsxs3("div", { children: [
-              /* @__PURE__ */ jsx5("span", { className: "font-bold text-white", children: "Horarios:" }),
-              " Se puede llegar a cualquier hora, s\xF3lo procur\xE1 cumplir con lo que pongas en el form."
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxs3("li", { className: "flex items-start", children: [
-            /* @__PURE__ */ jsx5("span", { className: "text-[var(--color-pink)] mr-3 text-xl", children: "\u{1F4A4}" }),
-            /* @__PURE__ */ jsxs3("div", { children: [
-              /* @__PURE__ */ jsx5("span", { className: "font-bold text-white", children: "Si te qued\xE1s a dormir:" }),
-              " Paciencia el lunes, se me funde la bater\xEDa social."
-            ] })
-          ] })
         ] })
       ] }),
       /* @__PURE__ */ jsxs3("section", { id: "faq", className: "my-16 text-left", children: [

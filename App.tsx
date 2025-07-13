@@ -262,8 +262,18 @@ const App: React.FC = () => {
                         Ir a la Playlist
                     </a>
                 </section>
+                
+                <section id="extras" className="section-card my-16 text-left">
+                     <h2 className="text-3xl font-bold text-[var(--color-orange)] mb-6 text-center">Tené en cuenta</h2>
+                     <ul className="space-y-4 text-[var(--color-beige)]">
+                        <li className="flex items-start"><span className="text-[var(--color-pink)] mr-3 text-xl">🍹</span><div><span className="font-bold text-white">Bebidas:</span> Podés traer algo en especial si querés (habrá gaseosa, agua, té, mate, pero nada de alcohol).</div></li>
+                        <li className="flex items-start"><span className="text-[var(--color-pink)] mr-3 text-xl">🍕</span><div><span className="font-bold text-white">Comida:</span> Comida extra siempre es bienvenida. Lo que no se come, se freeza.</div></li>
+                        <li className="flex items-start"><span className="text-[var(--color-pink)] mr-3 text-xl">🕒</span><div><span className="font-bold text-white">Horarios:</span> Se puede llegar a cualquier hora, sólo procurá cumplir con lo que pongas en el form.</div></li>
+                        <li className="flex items-start"><span className="text-[var(--color-pink)] mr-3 text-xl">💤</span><div><span className="font-bold text-white">Si te quedás a dormir:</span> Paciencia el lunes, se me funde la batería social.</div></li>
+                     </ul>
+                </section>
 
-                <section id="rsvp" className="section-card my-16">
+                 <section id="rsvp" className="section-card my-16">
                      <h2 className="text-3xl font-bold text-[var(--color-violet)] mb-6">Confirmá tu asistencia</h2>
                     {isSubmitted ? (
                         <div className="text-center p-8 bg-green-500/20 border border-green-500 rounded-lg">
@@ -335,16 +345,6 @@ const App: React.FC = () => {
                             </div>
                         </form>
                     )}
-                </section>
-                
-                <section id="extras" className="section-card my-16 text-left">
-                     <h2 className="text-3xl font-bold text-[var(--color-orange)] mb-6 text-center">Tené en cuenta</h2>
-                     <ul className="space-y-4 text-[var(--color-beige)]">
-                        <li className="flex items-start"><span className="text-[var(--color-pink)] mr-3 text-xl">🍹</span><div><span className="font-bold text-white">Bebidas:</span> Podés traer algo en especial si querés (habrá gaseosa, agua, té, mate, pero nada de alcohol).</div></li>
-                        <li className="flex items-start"><span className="text-[var(--color-pink)] mr-3 text-xl">🍕</span><div><span className="font-bold text-white">Comida:</span> Comida extra siempre es bienvenida. Lo que no se come, se freeza.</div></li>
-                        <li className="flex items-start"><span className="text-[var(--color-pink)] mr-3 text-xl">🕒</span><div><span className="font-bold text-white">Horarios:</span> Se puede llegar a cualquier hora, sólo procurá cumplir con lo que pongas en el form.</div></li>
-                        <li className="flex items-start"><span className="text-[var(--color-pink)] mr-3 text-xl">💤</span><div><span className="font-bold text-white">Si te quedás a dormir:</span> Paciencia el lunes, se me funde la batería social.</div></li>
-                     </ul>
                 </section>
                 
                 <section id="faq" className="my-16 text-left">
